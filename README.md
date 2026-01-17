@@ -211,9 +211,6 @@ A: 可以，修改 `src/internal/proxies/open_ai_proxy.go` 中的 `GetConclusion
 
 A: 目前預設使用繁體中文，可以修改 prompt 來支援其他語言。
 
-## 授權
-
-[請根據實際情況添加授權資訊]
 
 ## 貢獻
 
@@ -221,4 +218,4 @@ A: 目前預設使用繁體中文，可以修改 prompt 來支援其他語言。
 
 ## 聯絡方式
 
-[請根據實際情況添加聯絡資訊]
+asdfg55887@gmail.com
