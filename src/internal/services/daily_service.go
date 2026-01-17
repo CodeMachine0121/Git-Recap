@@ -14,6 +14,10 @@ type DailyService struct {
 func (s *DailyService) DoDailyWorkConclusion(projectPath string) {
 
 	commitRecord := s.commitService.GetDailyCommitMessages(projectPath)
+	if commitRecord.CommitMessage == nil || len(commitRecord.CommitMessage) == 0 {
+		println("No commit messages found for the project")
+		return
+	}
 	conclusion := s.conclusionService.GetConclusion(commitRecord)
 	err := s.persistenceRepo.Save(domains.DailyWorkConclusionRecord{
 		ProjectName: commitRecord.ProjectName,

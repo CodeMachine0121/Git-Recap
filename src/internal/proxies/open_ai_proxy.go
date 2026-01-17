@@ -66,6 +66,7 @@ Please provide a brief conclusion (2-3 sentences) summarizing the main accomplis
 	}
 
 	if len(resp.Choices) > 0 {
+		println(resp.Choices[0].Message.Content)
 		return strings.TrimSpace(resp.Choices[0].Message.Content)
 	}
 
