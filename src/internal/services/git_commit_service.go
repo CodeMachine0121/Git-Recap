@@ -3,6 +3,7 @@ package services
 import (
 	"commit-record/src/internal/domains"
 	"commit-record/src/internal/git"
+	"path/filepath"
 )
 
 type GitCommitService struct {
@@ -12,8 +13,9 @@ type GitCommitService struct {
 func (s *GitCommitService) GetDailyCommitMessages(projectPath string) domains.CommitRecord {
 
 	commitRecord := s.gitHandler.GetCommitMessages(projectPath)
+	projectName := filepath.Base(projectPath)
 
-	return domains.CommitRecord{ProjectName: projectPath, CommitMessage: commitRecord}
+	return domains.CommitRecord{ProjectName: projectName, CommitMessage: commitRecord}
 }
 
 func NewGitCommitService(gitHandler git.IGitHandler) *GitCommitService {
