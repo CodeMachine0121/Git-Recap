@@ -14,6 +14,10 @@ func (s *ConclusionService) GetConclusion(record domains.CommitRecord) string {
 	return conclusion
 }
 
+func (s *ConclusionService) GetBatchConclusion(records []domains.CommitRecord) map[string]string {
+	return s.proxy.GetBatchConclusion(records)
+}
+
 func NewConclusionService(proxy proxies.IOpenAiProxy) *ConclusionService {
 	return &ConclusionService{proxy}
 }

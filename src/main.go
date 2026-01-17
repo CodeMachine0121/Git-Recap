@@ -33,12 +33,13 @@ func main() {
 	conclusionService := services.NewConclusionService(openAiProxy)
 	dailyService := services.NewDailyService(gitService, conclusionService, persistenceRepo)
 
+	// 驗證所有專案路徑
 	for _, projectPath := range projectPaths {
 		if _, err := os.Stat(projectPath); os.IsNotExist(err) {
 			fmt.Printf("Error: Path does not exist: %s\n", projectPath)
 			os.Exit(1)
 		}
-
-		dailyService.DoDailyWorkConclusion(projectPath)
 	}
+
+	dailyService.DoDailyWorkConclusionBatch(projectPaths)
 }

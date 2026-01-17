@@ -10,6 +10,12 @@ func (m *MockOpenAiProxy) GetConclusion(domains.CommitRecord) string {
 	m.IsReceived = true
 	return "conclusion"
 }
+
+func (m *MockOpenAiProxy) GetBatchConclusion([]domains.CommitRecord) map[string]string {
+	m.IsReceived = true
+	return map[string]string{"project1": "conclusion1", "project2": "conclusion2"}
+}
+
 func NewMockOpenAiProxy() *MockOpenAiProxy {
 	return &MockOpenAiProxy{}
 }
