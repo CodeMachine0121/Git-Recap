@@ -37,27 +37,26 @@ func (p *OpenAiProxy) GetConclusion(record domains.CommitRecord) string {
 		commitList.WriteString(fmt.Sprintf("%d. %s\n", i+1, msg))
 	}
 
-	prompt := fmt.Sprintf(`
-Based on the following commit messages for the project "%s", please provide a concise summary of the work done today. Focus on the key achievements and changes made.
+	prompt := fmt.Sprintf(`專案「%s」的今日 commit 訊息：
 
-Commit messages:
 %s
 
-Please provide a brief conclusion (2-3 sentences) summarizing the main accomplishments ( using trandtional Chinese ).`,
+請用繁體中文總結今日主要成果（2-3句話）。`,
 		record.ProjectName,
 		commitList.String())
 
 	resp, err := p.client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT5Mini,
+			Model: openai.GPT4oMini,
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
 					Content: prompt,
 				},
 			},
-			MaxCompletionTokens: 200,
+			MaxCompletionTokens: 150,
+			Temperature:         0.3,
 		},
 	)
 
@@ -66,7 +65,6 @@ Please provide a brief conclusion (2-3 sentences) summarizing the main accomplis
 	}
 
 	if len(resp.Choices) > 0 {
-		println(resp.Choices[0].Message.Content)
 		return strings.TrimSpace(resp.Choices[0].Message.Content)
 	}
 
