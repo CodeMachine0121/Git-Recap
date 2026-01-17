@@ -40,11 +40,36 @@ func (p *OpenAiProxy) GetConclusion(record domains.CommitRecord) string {
 		commitList.WriteString(fmt.Sprintf("%d. %s\n", i+1, msg))
 	}
 
-	prompt := fmt.Sprintf(`專案「%s」的今日 commit 訊息：
+	prompt := fmt.Sprintf(`請根據專案「%s」的今日 commit 訊息，生成一份結構化的工作總結：
 
 %s
 
-請用繁體中文總結今日主要成果（2-3句話）。`,
+請以以下格式用繁體中文輸出（請直接輸出 Markdown 格式，不要包含專案名稱標題）：
+
+### 主要工作項目
+
+1. **功能開發**
+   - [列出新增的功能]
+
+2. **問題修復**
+   - [列出修復的問題]
+
+3. **優化改進**
+   - [列出優化和改進項目]
+
+### 技術亮點
+
+- [列出值得注意的技術實作或創新點]
+
+### 明日計畫
+
+- [根據今日進度，建議明日可能的工作重點]
+
+注意：
+- 如果某個類別（功能開發/問題修復/優化改進）沒有相關內容，請省略該類別
+- 請根據實際 commit 內容分析，不要編造不存在的工作項目
+- 技術亮點應該簡潔有力，突出重點
+- 明日計畫應該合理且具體`,
 		record.ProjectName,
 		commitList.String())
 
@@ -58,7 +83,7 @@ func (p *OpenAiProxy) GetConclusion(record domains.CommitRecord) string {
 					Content: prompt,
 				},
 			},
-			MaxCompletionTokens: 150,
+			MaxCompletionTokens: 1000,
 			Temperature:         0.3,
 		},
 	)
@@ -78,7 +103,7 @@ func (p *OpenAiProxy) GetBatchConclusion(records []domains.CommitRecord) map[str
 
 	// 合併所有專案成一個請求
 	var promptBuilder strings.Builder
-	promptBuilder.WriteString("以下是多個專案的今日 commit 訊息，請分別總結每個專案的主要成果（每個專案 2-3 句話）：\n\n")
+	promptBuilder.WriteString("以下是多個專案的今日 commit 訊息，請為每個專案生成結構化的工作總結：\n\n")
 
 	for _, record := range records {
 		promptBuilder.WriteString(fmt.Sprintf("## 專案「%s」\n", record.ProjectName))
@@ -88,8 +113,35 @@ func (p *OpenAiProxy) GetBatchConclusion(records []domains.CommitRecord) map[str
 		promptBuilder.WriteString("\n")
 	}
 
-	promptBuilder.WriteString("請以以下格式回覆，每個專案一段：\n")
-	promptBuilder.WriteString("【專案名稱】\n總結內容\n\n")
+	promptBuilder.WriteString(`請以以下格式用繁體中文回覆，每個專案包含完整的結構化總結：
+
+【專案名稱】
+### 主要工作項目
+
+1. **功能開發**
+   - [列出新增的功能]
+
+2. **問題修復**
+   - [列出修復的問題]
+
+3. **優化改進**
+   - [列出優化和改進項目]
+
+### 技術亮點
+
+- [列出值得注意的技術實作或創新點]
+
+### 明日計畫
+
+- [根據今日進度，建議明日可能的工作重點]
+
+注意：
+- 每個專案都要以「【專案名稱】」開頭（使用全形括號）
+- 如果某個類別（功能開發/問題修復/優化改進）沒有相關內容，請省略該類別
+- 請根據實際 commit 內容分析，不要編造不存在的工作項目
+- 技術亮點應該簡潔有力，突出重點
+- 明日計畫應該合理且具體
+`)
 
 	resp, err := p.client.CreateChatCompletion(
 		context.Background(),
@@ -101,7 +153,7 @@ func (p *OpenAiProxy) GetBatchConclusion(records []domains.CommitRecord) map[str
 					Content: promptBuilder.String(),
 				},
 			},
-			MaxCompletionTokens: 500,
+			MaxCompletionTokens: 2000,
 			Temperature:         0.3,
 		},
 	)

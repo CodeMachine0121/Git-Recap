@@ -33,15 +33,16 @@ func (*PersistenceRepository) Save(record domains.DailyWorkConclusionRecord) err
 	fileName := fmt.Sprintf("%s.md", record.ProjectName)
 	filePath := filepath.Join(dirPath, fileName)
 
-	// Prepare markdown content
-	content := fmt.Sprintf("# %s - Work Conclusion\n\n", record.ProjectName)
-	content += fmt.Sprintf("**Date:** %s\n\n", currentDate)
-	content += "## Summary\n\n"
+	// Prepare markdown content with structured format
+	content := fmt.Sprintf("# 每日工作總結 - %s\n\n", currentDate)
+	content += fmt.Sprintf("## 專案：%s\n\n", record.ProjectName)
 	content += record.Conclusion + "\n"
 
 	// Write to file
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
 		return fmt.Errorf("failed to write file %s: %w", filePath, err)
 	}
+
+	fmt.Printf("✓ 已儲存工作總結：%s\n", filePath)
 	return nil
 }

@@ -18,14 +18,15 @@ func (parser *MultiProjectResponseParser) Parse(content string, records []domain
 	var currentContent strings.Builder
 
 	for _, line := range lines {
-		line = strings.TrimSpace(line)
+		trimmedLine := strings.TrimSpace(line)
 
-		if projectName, isHeader := parser.extractProjectName(line); isHeader {
+		if projectName, isHeader := parser.extractProjectName(trimmedLine); isHeader {
 			parser.saveCurrentProject(currentProject, &currentContent, result)
 			currentProject = projectName
-		} else if line != "" && currentProject != "" {
-			currentContent.WriteString(line)
-			currentContent.WriteString(" ")
+		} else if currentProject != "" {
+			// 保留原始行（包括前導空格以保持縮排）但移除行尾空白
+			currentContent.WriteString(strings.TrimRight(line, " \t"))
+			currentContent.WriteString("\n")
 		}
 	}
 
@@ -36,13 +37,16 @@ func (parser *MultiProjectResponseParser) Parse(content string, records []domain
 }
 
 func (parser *MultiProjectResponseParser) extractProjectName(line string) (string, bool) {
+	// 匹配 【專案名稱】 格式（這是我們在 prompt 中要求的格式）
 	if strings.HasPrefix(line, "【") && strings.Contains(line, "】") {
 		name := strings.TrimPrefix(line, "【")
 		name = strings.TrimSuffix(name, "】")
 		return name, true
 	}
 
-	if strings.HasPrefix(line, "##") {
+	// 只匹配 "## " 開頭（兩個井號加空格），避免匹配 "###"（三個井號）等內文標題
+	// 同時要確保不是 "### " 開頭
+	if strings.HasPrefix(line, "## ") && !strings.HasPrefix(line, "### ") {
 		name := strings.TrimPrefix(line, "## ")
 		name = strings.TrimPrefix(name, "專案「")
 		name = strings.TrimSuffix(name, "」")
