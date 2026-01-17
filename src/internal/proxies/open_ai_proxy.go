@@ -50,15 +50,14 @@ Please provide a brief conclusion (2-3 sentences) summarizing the main accomplis
 	resp, err := p.client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT4oMini,
+			Model: openai.GPT5Mini,
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
 					Content: prompt,
 				},
 			},
-			Temperature: 0.7,
-			MaxTokens:   200,
+			MaxCompletionTokens: 200,
 		},
 	)
 
