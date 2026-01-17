@@ -1,10 +1,10 @@
-# Commit Record
+# GitRecap
 
 一個使用 AI 自動生成每日工作總結的 Git 提交記錄分析工具。
 
 ## 專案簡介
 
-Commit Record 是一個基於 Go 語言開發的命令列工具，能夠自動分析 Git 專案的提交記錄，並透過 OpenAI API 生成繁體中文的每日工作總結。支援單一專案或多專案的批次處理，幫助開發者快速回顧和記錄每日的工作成果。
+GitRecap 是一個基於 Go 語言開發的命令列工具，能夠自動分析 Git 專案的提交記錄，並透過 OpenAI API 生成繁體中文的每日工作總結。支援單一專案或多專案的批次處理，幫助開發者快速回顧和記錄每日的工作成果。
 
 ## 功能特色
 
@@ -29,7 +29,7 @@ Commit Record 是一個基於 Go 語言開發的命令列工具，能夠自動�
 
 ```bash
 git clone <repository-url>
-cd commit-record
+cd GitRecap
 ```
 
 ### 2. 安裝依賴
@@ -42,7 +42,7 @@ go mod download
 ### 3. 編譯
 
 ```bash
-go build -o commit-record main.go
+go build -o gitrecap main.go
 ```
 
 或使用 Makefile（如果有提供）：
@@ -73,7 +73,7 @@ source ~/.zshrc
 ### 基本語法
 
 ```bash
-commit-record [--bench|--single] <project-path-1> [<project-path-2> ...]
+gitrecap [--bench|--single] <project-path-1> [<project-path-2> ...]
 ```
 
 ### 參數說明
@@ -99,31 +99,31 @@ commit-record [--bench|--single] <project-path-1> [<project-path-2> ...]
 #### 1. 處理單一專案（使用預設批次模式）
 
 ```bash
-./commit-record /path/to/my-project
+./gitrecap /path/to/my-project
 ```
 
 #### 2. 批次處理多個專案
 
 ```bash
-./commit-record --bench /path/to/project1 /path/to/project2 /path/to/project3
+./gitrecap --bench /path/to/project1 /path/to/project2 /path/to/project3
 ```
 
 #### 3. 單一模式處理多個專案
 
 ```bash
-./commit-record --single /path/to/project1 /path/to/project2
+./gitrecap --single /path/to/project1 /path/to/project2
 ```
 
 #### 4. 使用相對路徑
 
 ```bash
-./commit-record --bench ../frontend ../backend
+./gitrecap --bench ../frontend ../backend
 ```
 
 #### 5. 處理當前目錄
 
 ```bash
-./commit-record --single .
+./gitrecap --single .
 ```
 
 ## 輸出範例
@@ -172,7 +172,7 @@ commit-record [--bench|--single] <project-path-1> [<project-path-2> ...]
 ## 專案結構
 
 ```
-commit-record/
+GitRecap/
 ├── src/
 │   ├── main.go                    # 主程式入口
 │   ├── internal/
