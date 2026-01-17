@@ -1,7 +1,7 @@
 package services
 
 import (
-	domains "commit-record/src/internal/domains"
+	"commit-record/src/internal/domains"
 	"commit-record/src/internal/git"
 )
 
