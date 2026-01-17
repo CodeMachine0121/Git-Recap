@@ -8,16 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type MockOpenAiProxy struct{ IsReceived bool }
-
-func (m *MockOpenAiProxy) GetConclusion(domains.CommitRecord) string {
-	m.IsReceived = true
-	return "conclusion"
-}
-func NewMockOpenAiProxy() *MockOpenAiProxy {
-	return &MockOpenAiProxy{}
-}
-
 func TestGetConclusionByAi(t *testing.T) {
 
 	proxy := NewMockOpenAiProxy()

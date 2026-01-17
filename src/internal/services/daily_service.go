@@ -1,21 +1,30 @@
 package services
 
 import (
-	domains "commit-record/src/internal/domains"
-	"commit-record/src/internal/git"
+	"commit-record/src/internal/domains"
+	"commit-record/src/internal/repositories"
 )
 
 type DailyService struct {
-	gitHandler git.IGitHandler
+	commitService     *GitCommitService
+	conclusionService *ConclusionService
+	persistenceRepo   repositories.IPersistenceRepository
 }
 
-func (s *DailyService) GetDailyCommitMessages(projectPath string) domains.CommitRecord {
+func (s *DailyService) DoDailyWorkConclusion(projectPath string) {
 
-	commitRecord := s.gitHandler.GetCommitMessages(projectPath)
+	commitRecord := s.commitService.GetDailyCommitMessages(projectPath)
+	conclusion := s.conclusionService.GetConclusion(commitRecord)
+	err := s.persistenceRepo.Save(domains.DailyWorkConclusionRecord{
+		ProjectName: commitRecord.ProjectName,
+		Conclusion:  conclusion,
+	})
 
-	return domains.CommitRecord{ProjectName: projectPath, CommitMessage: commitRecord}
+	if err != nil {
+		panic(err)
+	}
 }
 
-func NewDailyService(gitHandler git.IGitHandler) *DailyService {
-	return &DailyService{gitHandler}
+func NewDailyService(commitService *GitCommitService, conclusionService *ConclusionService, persistenceRepo repositories.IPersistenceRepository) *DailyService {
+	return &DailyService{commitService, conclusionService, persistenceRepo}
 }
