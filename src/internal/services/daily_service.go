@@ -29,11 +29,11 @@ func (s *DailyService) DoDailyWorkConclusion(author, projectPath string) {
 	}
 }
 
-func (s *DailyService) DoDailyWorkConclusionBatch(projectPaths []string) {
+func (s *DailyService) DoDailyWorkConclusionBatch(author string, projectPaths []string) {
 	var records []domains.CommitRecord
 
 	for _, projectPath := range projectPaths {
-		commitRecord := s.commitService.GetDailyCommitMessages(projectPath, "")
+		commitRecord := s.commitService.GetDailyCommitMessages(author, projectPath)
 		if commitRecord.CommitMessage != nil && len(commitRecord.CommitMessage) > 0 {
 			records = append(records, commitRecord)
 		}

@@ -15,12 +15,15 @@ func main() {
 	benchMode := flag.Bool("bench", false, "使用批次處理模式")
 	singleMode := flag.Bool("single", false, "使用單一專案處理模式")
 	flag.Parse()
-	projectPaths := flag.Args()
+	args := flag.Args()
 
-	if len(projectPaths) == 0 {
-		fmt.Println("Usage: commit-record [--bench|--single] <project-path-1> [<project-path-2> ...]")
+	if len(args) < 2 {
+		fmt.Println("Usage: commit-record [--bench|--single] <author-name> <project-path-1> [<project-path-2> ...]")
 		os.Exit(1)
 	}
+
+	author := args[0]
+	projectPaths := args[1:]
 
 	if *benchMode && *singleMode {
 		fmt.Println("Error: Cannot use both --bench and --single flags")
@@ -50,13 +53,13 @@ func main() {
 
 	// 根據標誌選擇執行模式
 	if *benchMode {
-		dailyService.DoDailyWorkConclusionBatch(projectPaths)
+		dailyService.DoDailyWorkConclusionBatch(author, projectPaths)
 	} else if *singleMode {
 		for _, projectPath := range projectPaths {
-			dailyService.DoDailyWorkConclusion(projectPath)
+			dailyService.DoDailyWorkConclusion(author, projectPath)
 		}
 	} else {
 		// 預設使用批次模式
-		dailyService.DoDailyWorkConclusionBatch(projectPaths)
+		dailyService.DoDailyWorkConclusionBatch(author, projectPaths)
 	}
 }
