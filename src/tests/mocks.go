@@ -24,7 +24,7 @@ type MockGitHandler struct {
 	IsReceived bool
 }
 
-func (m *MockGitHandler) GetCommitMessages(string) []string {
+func (m *MockGitHandler) GetCommitMessages(string, string) []string {
 	m.IsReceived = true
 	return []string{"commit message1", "commit message2"}
 }

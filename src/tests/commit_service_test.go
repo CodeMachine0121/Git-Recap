@@ -12,7 +12,7 @@ func TestGetDailyCommitMessage(t *testing.T) {
 	handler := NewMockGitHandler()
 	service := services.NewGitCommitService(handler)
 
-	messages := service.GetDailyCommitMessages("path/to/project")
+	messages := service.GetDailyCommitMessages("path/to/project", "")
 
 	assert.True(t, handler.IsReceived)
 	assert.True(t, len(messages.CommitMessage) == 2)

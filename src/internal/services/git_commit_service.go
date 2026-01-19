@@ -10,9 +10,9 @@ type GitCommitService struct {
 	gitHandler git.IGitHandler
 }
 
-func (s *GitCommitService) GetDailyCommitMessages(projectPath string) domains.CommitRecord {
+func (s *GitCommitService) GetDailyCommitMessages(author, projectPath string) domains.CommitRecord {
 
-	commitRecord := s.gitHandler.GetCommitMessages(projectPath)
+	commitRecord := s.gitHandler.GetCommitMessages(author, projectPath)
 	projectName := filepath.Base(projectPath)
 
 	return domains.CommitRecord{ProjectName: projectName, CommitMessage: commitRecord}

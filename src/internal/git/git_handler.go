@@ -8,18 +8,19 @@ import (
 )
 
 type IGitHandler interface {
-	GetCommitMessages(projectPath string) []string
+	GetCommitMessages(author, projectPath string) []string
 }
 
 type GitHandler struct{}
 
-func (*GitHandler) GetCommitMessages(projectPath string) []string {
+func (*GitHandler) GetCommitMessages(author, projectPath string) []string {
 	// Get today's date at midnight for filtering commits
 	today := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
 
 	cmd := exec.Command("git", "--no-pager",
 		"log",
 		"--since="+today,
+		"--author="+author,
 		"--format=%s")
 	cmd.Dir = projectPath
 

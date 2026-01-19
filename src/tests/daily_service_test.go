@@ -18,7 +18,7 @@ func TestGetDailyWorkConclusion(t *testing.T) {
 		services.NewConclusionService(openAiProxy),
 		persistenceRepo)
 
-	service.DoDailyWorkConclusion("path/to/project")
+	service.DoDailyWorkConclusion("any-author", "path/to/project")
 
 	assert.True(t, gitHandler.IsReceived)
 	assert.True(t, openAiProxy.IsReceived)
