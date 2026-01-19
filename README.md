@@ -9,6 +9,7 @@ GitRecap 是一個基於 Go 語言開發的命令列工具，能夠自動分析 
 ## 功能特色
 
 - **自動化提交分析**：自動讀取 Git 提交歷史並分析變更內容
+- **作者篩選**：支援指定作者名稱，只分析特定開發者的提交記錄
 - **AI 驅動總結**：使用 OpenAI GPT 模型生成結構化的工作總結
 - **多專案支援**：可同時處理多個專案的提交記錄
 - **雙模式運行**：
@@ -73,7 +74,7 @@ source ~/.zshrc
 ### 基本語法
 
 ```bash
-gitrecap [--bench|--single] <project-path-1> [<project-path-2> ...]
+gitrecap [--bench|--single] <author-name> <project-path-1> [<project-path-2> ...]
 ```
 
 ### 參數說明
@@ -88,6 +89,8 @@ gitrecap [--bench|--single] <project-path-1> [<project-path-2> ...]
   - 適合需要獨立分析每個專案的情況
   - 生成更詳細的個別專案總結
 
+- `<author-name>`：Git 提交作者名稱（用於篩選特定作者的提交記錄）
+
 - `<project-path>`：Git 專案的路徑（可以是相對或絕對路徑）
 
 **注意**：
@@ -99,31 +102,31 @@ gitrecap [--bench|--single] <project-path-1> [<project-path-2> ...]
 #### 1. 處理單一專案（使用預設批次模式）
 
 ```bash
-./gitrecap /path/to/my-project
+./gitrecap "John Doe" /path/to/my-project
 ```
 
 #### 2. 批次處理多個專案
 
 ```bash
-./gitrecap --bench /path/to/project1 /path/to/project2 /path/to/project3
+./gitrecap --bench "John Doe" /path/to/project1 /path/to/project2 /path/to/project3
 ```
 
 #### 3. 單一模式處理多個專案
 
 ```bash
-./gitrecap --single /path/to/project1 /path/to/project2
+./gitrecap --single "John Doe" /path/to/project1 /path/to/project2
 ```
 
 #### 4. 使用相對路徑
 
 ```bash
-./gitrecap --bench ../frontend ../backend
+./gitrecap --bench "John Doe" ../frontend ../backend
 ```
 
 #### 5. 處理當前目錄
 
 ```bash
-./gitrecap --single .
+./gitrecap --single "John Doe" .
 ```
 
 ## 輸出範例
@@ -187,7 +190,7 @@ GitRecap/
 
 ## 工作原理
 
-1. **讀取提交記錄**：從指定的 Git 專案中讀取今日的所有提交
+1. **讀取提交記錄**：從指定的 Git 專案中讀取今日特定作者的所有提交
 2. **提取變更資訊**：分析每個提交的訊息和檔案變更
 3. **AI 分析**：將提交資訊傳送給 OpenAI API 進行智能分析
 4. **生成總結**：接收 AI 生成的結構化工作總結
